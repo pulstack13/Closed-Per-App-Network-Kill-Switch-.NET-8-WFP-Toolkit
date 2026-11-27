@@ -1,0 +1,21 @@
+# .NET
+bin/
+obj/
+out/
+publish/
+*.user
+*.suo
+*.cache
+.vs/
+TestResults/
+coverage*/
+
+# Logs & runtime data
+*.log
+*.tmp
+logs/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
