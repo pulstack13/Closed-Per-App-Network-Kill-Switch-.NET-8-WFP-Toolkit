@@ -1,0 +1,61 @@
+<Window x:Class="NetworkIsolation.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Network Switcher" Height="600" Width="920"
+        MinHeight="420" MinWidth="700"
+        Background="#F4F6F8"
+        Loaded="Window_Loaded" Closed="Window_Closed">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,0,18">
+            <Button DockPanel.Dock="Right" Content="Refresh" Padding="18,9" Click="Refresh_Click" />
+            <StackPanel>
+                <TextBlock Text="Network Switcher" FontSize="26" FontWeight="SemiBold" Foreground="#17212B" />
+                <TextBlock Text="Choose which network adapter each app is allowed to use." Margin="0,4,0,0" Foreground="#536273" />
+            </StackPanel>
+        </DockPanel>
+
+        <Border Grid.Row="1" Background="#FFF4D6" BorderBrush="#E8C66A" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,14">
+            <TextBlock Text="Windows chooses the route. If it doesn't use your selected adapter, the app may lose internet instead of switching routes. Choices last only while this window is open." TextWrapping="Wrap" Foreground="#604B16" />
+        </Border>
+
+        <DataGrid x:Name="AppsGrid" Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False"
+                  IsReadOnly="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                  Background="White" BorderBrush="#D8DEE5" RowHeight="52" SelectionMode="Single"
+                  ItemsSource="{Binding Apps}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Application" Binding="{Binding DisplayName}" IsReadOnly="True" Width="2*" />
+                <DataGridTextColumn Header="Process IDs" Binding="{Binding ProcessIdsText}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Rule" Binding="{Binding RuleStatus}" IsReadOnly="True" Width="*" />
+                <DataGridTemplateColumn Header="Network adapter" Width="2*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding DataContext.Adapters, RelativeSource={RelativeSource AncestorType=Window}}"
+                                      DisplayMemberPath="DisplayName" SelectedValuePath="NetLuid"
+                                      SelectedValue="{Binding SelectedLuid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="4" Padding="6" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="Apply" Padding="12,6" Margin="2" Click="Apply_Click" />
+                                <Button Content="Remove" Padding="10,6" Margin="2" Click="Remove_Click" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock x:Name="StatusText" Grid.Row="3" Margin="0,12,0,0" Foreground="#536273" Text="Starting…" TextWrapping="Wrap" />
+    </Grid>
+</Window>
